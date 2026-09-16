@@ -15,6 +15,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const corsOptions = {
+  origin: "*", // Replace with your exact frontend URL
+  credentials: true, // Required if you are sending cookies or tokens
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+
+app.use(express.urlencoded({ extended: true }));
+
 // 1. రూట్లను ఎప్పుడూ సర్వర్ స్టార్ట్ అవ్వడానికి ముందే డిక్లేర్ చేయాలి 👇
 app.use("/api/users", userRoutes);
 app.use("/api/customers", customerRoutes);
