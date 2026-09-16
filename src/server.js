@@ -1,51 +1,22 @@
 import express from "express";
-import connectionDB from "../config/db.js";
-import cors from "cors";
+import pool from "../config/db.js";
 import dotenv from "dotenv";
-
-import userRoutes from "./routes/userRoute.js";
-import customerRoutes from "./routes/customerRoute.js";
-import paymentRoutes from "./routes/paymentRoute.js";
 
 dotenv.config();
 
 const app = express();
-
-// Middlewares
-app.use(cors());
 app.use(express.json());
 
-const corsOptions = {
-  origin: "*", // Replace with your exact frontend URL
-  credentials: true, // Required if you are sending cookies or tokens
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+app.get("/", (req, res) => res.send("API is running"));
 
-app.use(cors(corsOptions));
-
-app.use(express.urlencoded({ extended: true }));
-
-// 1. రూట్లను ఎప్పుడూ సర్వర్ స్టార్ట్ అవ్వడానికి ముందే డిక్లేర్ చేయాలి 👇
-app.use("/api/users", userRoutes);
-app.use("/api/customers", customerRoutes);
-app.use("/api/payments", paymentRoutes);
+app.get("/users", async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM users");
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 const PORT = process.env.PORT || 3000;
-
-const initialDBServer = async () => {
-  try {
-    await connectionDB;
-    console.log("✅ Database connected successfully");
-
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`🚀 Server is running on http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error("❌ Database connection failed:", error.message);
-    process.exit(1);
-  }
-};
-
-// 2. సర్వర్‌ను చివర్లో రన్ చేయాలి
-initialDBServer();
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
