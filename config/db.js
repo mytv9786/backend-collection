@@ -14,12 +14,12 @@ dotenv.config();
 // });
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || process.env.DB_LOCAL_HOST,
-  user: process.env.DB_USER || process.env.DB_LOCAL_USER,
-  password: process.env.DB_PASSWORD || process.env.DB_LOCAL_PASSWORD,
-  database: process.env.DB_NAME || process.env.DB_LOCAL_NAME,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DBCAL_PASSWORD,
+  database: process.env.DB_NAME,
   //port: process.env.DB_PORT ? parseInt(process.env.DB_LOCAL_PORT) : 3306, // పోర్ట్ నంబర్ కోసం
-  port: process.env.PORT ? parseInt(process.env.PORT) : 3306,
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
