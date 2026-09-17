@@ -1,22 +1,59 @@
 import express from "express";
-import pool from "../config/db.js";
+import connectionDB from "../config/db.js";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
+
+import userRoutes from "./routes/userRoute.js";
+import customerRoutes from "./routes/customerRoute.js";
+import paymentRoutes from "./routes/paymentRoute.js";
 
 const app = express();
 app.use(express.json());
 
-app.get("/", (req, res) => res.send("API is running"));
+const allowedOrigins = [
+  "http://localhost:5173", // Vite dev server
+  "http://localhost:3000", // React dev server (CRA)
+  "https://your-frontend-domain.com", // మీ deployed frontend
+];
 
-app.get("/users", async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM users");
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/users", userRoutes);
+app.use("/api/customers", customerRoutes);
+app.use("/api/payments", paymentRoutes);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const initialDBServerStart = async () => {
+  try {
+    // Assuming your connection export handles the .connect() logic
+    await connectionDB;
+    console.log("✅ Database connected successfully");
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Database connection failed:", error.message);
+    process.exit(1); // Stop the app if it can't connect to the DB
+  }
+};
+
+initialDBServerStart();
