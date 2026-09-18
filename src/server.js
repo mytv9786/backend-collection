@@ -18,6 +18,7 @@ const allowedOrigins = [
   "https://saiteja-collection.netlify.app", // మీ deployed frontend
   "http://192.168.1.6:8080",
   "http://192.168.88.137:8080",
+  "https://saiteja-collection-app.netlify.app",
 ];
 
 const corsOptions = {
