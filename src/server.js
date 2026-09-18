@@ -15,7 +15,9 @@ app.use(express.json());
 const allowedOrigins = [
   "http://localhost:5173", // Vite dev server
   "http://localhost:3000", // React dev server (CRA)
-  "https://your-frontend-domain.com", // మీ deployed frontend
+  "https://saiteja-collection.netlify.app", // మీ deployed frontend
+  "http://192.168.1.6:8080",
+  "http://192.168.88.137:8080",
 ];
 
 const corsOptions = {
