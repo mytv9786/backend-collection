@@ -19,6 +19,7 @@ const allowedOrigins = [
   "http://192.168.1.6:8080",
   "http://192.168.88.137:8080",
   "https://saiteja-collection-app.netlify.app",
+  "http://localhost:51019",
 ];
 
 const corsOptions = {
