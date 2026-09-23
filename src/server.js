@@ -21,6 +21,7 @@ const allowedOrigins = [
   "https://saiteja-collection-app.netlify.app",
   "http://localhost:51555",
   "http://192.168.1.4:3000",
+  "https://frontend-collection-seven.vercel.app",
 ];
 
 const corsOptions = {
